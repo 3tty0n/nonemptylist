@@ -21,7 +21,7 @@ final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
   def map[T](f: A => T): NonEmptyList[T] =
     new NonEmptyList[T](f(head), tail.map(f))
 
-  def flatMap[T](f: A => NonEmptyList[T]): NonEmptyList[T] = {
+  def flatMapOld[T](f: A => NonEmptyList[T]): NonEmptyList[T] = {
     var bf = new ListBuffer[T]
     val hd = f(head)
     bf += hd.head
@@ -33,6 +33,16 @@ final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
     }
     val bbf = bf.toList
     new NonEmptyList[T](bbf.head, bbf.tail)
+  }
+
+  def flatMap[T](f: A => NonEmptyList[T]): NonEmptyList[T] = {
+    var bf = new ListBuffer[T]
+    (head :: tail).foreach { e =>
+      val r = f(e)
+      bf += r.head
+      bf ++= r.tail
+    }
+    new NonEmptyList[T](bf.head, bf.tail.toList)
   }
 
   override def toString: String = s"NonEmpty${head :: tail}"
@@ -50,4 +60,19 @@ object NonEmptyList {
 
   def apply[A](head: A, tail: A*): NonEmptyList[A] =
     new NonEmptyList[A](head, tail.toList)
+
+  implicit class RichIterable[A](val iter: Iterable[A]) {
+    def toNonEmptyList: NonEmptyList[A] = {
+      val lst = iter.toList
+      lst match {
+        case Nil => throw new CannotConvertException("Nil cannot be converted to NonEmptyList")
+        case _ => NonEmptyList(lst.head, lst.tail)
+      }
+    }
+
+    class CannotConvertException(
+                                  message: String = null,
+                                  throwable: Throwable = null
+                                ) extends RuntimeException(message, throwable)
+  }
 }
