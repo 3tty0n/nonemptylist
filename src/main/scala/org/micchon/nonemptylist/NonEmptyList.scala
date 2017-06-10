@@ -54,4 +54,20 @@ object NonEmptyList {
 
   def apply[A](head: A, tail: A*): NonEmptyList[A] =
     new NonEmptyList[A](head, tail.toList)
+
+  implicit class RichIterable[A](val iterable: Iterable[A]) {
+    def toNonEmptyList: NonEmptyList[A] = {
+      val lst = iterable.toList
+      lst match {
+        case Nil => throw new CannotConvertException("List() cannot be converted to NonEmptyList")
+        case x :: xs => NonEmptyList(x, xs)
+      }
+    }
+  }
+
+  class CannotConvertException(
+    message: String = null,
+    throwable: Throwable = null
+  ) extends RuntimeException(message, throwable)
+
 }

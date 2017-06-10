@@ -2,6 +2,8 @@ package org.micchon.nonemptylist
 
 import org.scalatest.FlatSpec
 
+import scala.collection.mutable.ListBuffer
+
 class NonEmptyListSpec extends FlatSpec {
 
   trait SetUp { self =>
@@ -34,5 +36,16 @@ class NonEmptyListSpec extends FlatSpec {
     case class Poyo(value: Int)
     val nel = NonEmptyList(Piyo("piyo"), Poyo(1), Poyo(2))
     assert(nel.collect { case Poyo(v) => v } === List(1, 2))
+  }
+
+  "implicit conversion" should "behave correctly" in new SetUp {
+    import NonEmptyList._
+    assert(List(1, 2, 3).toNonEmptyList === NonEmptyList(1, 2, 3))
+    assert(Seq("piyo").toNonEmptyList === NonEmptyList("piyo"))
+    intercept[CannotConvertException] {
+      List().toNonEmptyList
+      Seq().toNonEmptyList
+      ListBuffer().toNonEmptyList
+    }
   }
 }
