@@ -46,6 +46,10 @@ class NonEmptyListSpec extends FlatSpec {
     assert(nel0.filterNot(i => i % 2 == 0) === List(1, 3))
   }
 
+  "forall" should "" in new SetUp {
+    assert(nel0.forall(n => n >= 0) === true)
+    assert(nel3.forall(n => n == 1) === false)
+  }
 
   "implicit conversion" should "behave correctly" in new SetUp {
     import NonEmptyList._
