@@ -23,16 +23,12 @@ final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
 
   def flatMap[T](f: A => NonEmptyList[T]): NonEmptyList[T] = {
     var bf = new ListBuffer[T]
-    val hd = f(head)
-    bf += hd.head
-    bf ++= hd.tail
-    tail.foreach { e =>
-      val t = f(e)
-      bf += t.head
-      bf ++= t.tail
+    (head :: tail).foreach { e =>
+      val r = f(e)
+      bf += r.head
+      bf ++= r.tail
     }
-    val bbf = bf.toList
-    new NonEmptyList[T](bbf.head, bbf.tail)
+    new NonEmptyList[T](bf.head, bf.tail.toList)
   }
 
   override def toString: String = s"NonEmpty${head :: tail}"
