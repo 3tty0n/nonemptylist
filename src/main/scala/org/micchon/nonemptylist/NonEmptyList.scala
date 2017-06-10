@@ -43,6 +43,13 @@ final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
     if (f(head)) head :: tail.filter(f)
     else tail.filter(f)
   }
+
+  def filterNot(f: A => Boolean): List[A] = {
+    if (!f(head)) head :: tail.filterNot(f)
+    else tail.filterNot(f)
+  }
+
+
   override def toString: String = s"NonEmpty${head :: tail}"
 
   override def equals(obj: Any): Boolean =
