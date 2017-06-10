@@ -4,31 +4,31 @@ import scala.collection.mutable.ListBuffer
 
 final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
 
-  def ::[T >: A](x: T): NonEmptyList[T] =
-    new NonEmptyList[T](x, head :: tail)
+  def ::[B >: A](x: B): NonEmptyList[B] =
+    new NonEmptyList[B](x, head :: tail)
 
-  def :::[T >: A](xs: List[T]): NonEmptyList[T] =
+  def :::[B >: A](xs: List[B]): NonEmptyList[B] =
     xs match {
       case Nil => this
       case x :: xs => new NonEmptyList(x, xs ::: this.toList)
     }
 
-  def :::[T >: A](xs: NonEmptyList[T]): NonEmptyList[T] =
-    new NonEmptyList[T](xs.head, xs.tail ::: this.toList)
+  def :::[B >: A](xs: NonEmptyList[B]): NonEmptyList[B] =
+    NonEmptyList[B](xs.head, xs.tail ::: this.toList)
 
   def toList: List[A] = head :: tail
 
-  def map[T](f: A => T): NonEmptyList[T] =
-    new NonEmptyList[T](f(head), tail.map(f))
+  def map[B](f: A => B): NonEmptyList[B] =
+    NonEmptyList[B](f(head), tail.map(f))
 
-  def flatMap[T](f: A => NonEmptyList[T]): NonEmptyList[T] = {
-    var bf = new ListBuffer[T]
+  def flatMap[B](f: A => NonEmptyList[B]): NonEmptyList[B] = {
+    var bf = new ListBuffer[B]
     (head :: tail).foreach { e =>
       val r = f(e)
       bf += r.head
       bf ++= r.tail
     }
-    new NonEmptyList[T](bf.head, bf.tail.toList)
+    NonEmptyList[B](bf.head, bf.tail.toList)
   }
 
   override def toString: String = s"NonEmpty${head :: tail}"
