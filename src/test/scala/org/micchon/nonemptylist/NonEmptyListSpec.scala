@@ -38,6 +38,10 @@ class NonEmptyListSpec extends FlatSpec {
     assert(nel.collect { case Poyo(v) => v } === List(1, 2))
   }
 
+  "filter" should "filter NonEmptyList that is specified the conditions" in new SetUp {
+    assert(nel0.filter(i => i % 2 == 0) === List(2))
+  }
+
   "implicit conversion" should "behave correctly" in new SetUp {
     import NonEmptyList._
     assert(List(1, 2, 3).toNonEmptyList === NonEmptyList(1, 2, 3))
