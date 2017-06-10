@@ -8,7 +8,8 @@ class NonEmptyListSpec extends FlatSpec {
     val nel0 = NonEmptyList(1, 2, 3)
     val nel1 = NonEmptyList("hoge", "fuga")
     val nel2 = NonEmptyList(100, 200, 10000)
-    val lst1 = List(3.14)
+    val nel3 = NonEmptyList(1, "piyo", 3.0, false)
+    val lst0 = List(3.14)
   }
 
   "::" should "concatenate one and one nonempty list" in new SetUp {
@@ -17,7 +18,7 @@ class NonEmptyListSpec extends FlatSpec {
 
   ":::" should "concatenate one list(including nonempty list) and another one" in new SetUp {
     assert(nel1 ::: nel2 === NonEmptyList("hoge", "fuga", 100, 200, 10000))
-    assert(lst1 ::: nel2 === NonEmptyList(3.14, 100, 200, 10000))
+    assert(lst0 ::: nel2 === NonEmptyList(3.14, 100, 200, 10000))
   }
 
   "map" should "behave correctly" in new SetUp {
@@ -26,5 +27,12 @@ class NonEmptyListSpec extends FlatSpec {
 
   "flatMap" should "behave correctly" in new SetUp {
     assert(nel0.flatMap(e => NonEmptyList(e, e + 1)) === NonEmptyList(1, 2, 2, 3, 3, 4))
+  }
+
+  "collect" should "behave correctly" in new SetUp {
+    case class Piyo(value: String)
+    case class Poyo(value: Int)
+    val nel = NonEmptyList(Piyo("piyo"), Poyo(1), Poyo(2))
+    assert(nel.collect { case Poyo(v) => v } === List(1, 2))
   }
 }

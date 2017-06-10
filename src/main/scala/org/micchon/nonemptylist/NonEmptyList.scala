@@ -31,6 +31,14 @@ final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
     NonEmptyList[B](bf.head, bf.tail.toList)
   }
 
+  def collect[B](pf: PartialFunction[A, B]): List[B] = {
+    if (pf.isDefinedAt(head)) {
+      pf.apply(head) :: tail.collect(pf)
+    } else {
+      tail.collect(pf)
+    }
+  }
+
   override def toString: String = s"NonEmpty${head :: tail}"
 
   override def equals(obj: Any): Boolean =
