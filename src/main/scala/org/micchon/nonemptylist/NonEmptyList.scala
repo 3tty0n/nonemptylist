@@ -1,8 +1,5 @@
 package org.micchon.nonemptylist
 
-import com.sun.jndi.toolkit.ctx.HeadTail
-
-import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
 final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
@@ -13,11 +10,11 @@ final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
   def :::[T >: A](xs: List[T]): NonEmptyList[T] =
     xs match {
       case Nil => this
-      case x :: xs => new NonEmptyList(x, xs ::: (head :: tail))
+      case x :: xs => new NonEmptyList(x, xs ::: this.toList)
     }
 
   def :::[T >: A](xs: NonEmptyList[T]): NonEmptyList[T] =
-    new NonEmptyList[T](xs.head, xs.tail ::: (head :: tail))
+    new NonEmptyList[T](xs.head, xs.tail ::: this.toList)
 
   def toList: List[A] = head :: tail
 
