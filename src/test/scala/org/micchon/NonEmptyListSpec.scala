@@ -5,7 +5,7 @@ import org.scalatest.FunSuite
 import scala.collection.mutable.ListBuffer
 
 class NonEmptyListSpec extends FunSuite {
-  
+
   val nel0 = NonEmptyList(1, 2, 3)
   val nel1 = NonEmptyList("hoge", "fuga")
   val nel3 = NonEmptyList(1, "piyo", 3.0, false)
@@ -18,6 +18,14 @@ class NonEmptyListSpec extends FunSuite {
   test(":::") {
     assert(nel1 ::: nel0 === NonEmptyList("hoge", "fuga", 1, 2, 3))
     assert(lst0 ::: nel0 === NonEmptyList(3.14, 1, 2, 3))
+  }
+
+  test("++") {
+    assert(nel0 ++ lst0 === NonEmptyList(1, 2, 3, 3.14))
+  }
+
+  test("reverse") {
+    assert(nel0.reverse === NonEmptyList(3, 2, 1))
   }
 
   test("map") {
