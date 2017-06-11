@@ -1,6 +1,7 @@
-package org.micchon.nonemptylist
+package org.micchon
 
 import scala.collection.mutable.ListBuffer
+import org.micchon.exception.{CannotConvertException, CannotCreateException}
 
 final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
 
@@ -87,28 +88,8 @@ object NonEmptyList {
     new NonEmptyList[A](head, tail.toList)
 
   def apply[A](): NonEmptyList[A] =
-    throw new CannotCreateNonEmptyListException("Cannot create NonEmptyList()")
+    throw new CannotCreateException("Cannot create NonEmptyList()")
 
   def unapply[A](nel: NonEmptyList[A]): Option[(A, List[A])] =
     Some(nel.head, nel.tail)
-
-  implicit class RichItcerable[A](val iterable: Iterable[A]) {
-    def toNonEmptyList: NonEmptyList[A] = {
-      val lst = iterable.toList
-      lst match {
-        case Nil => throw new CannotConvertException("List() cannot be converted to NonEmptyList")
-        case x :: xs => NonEmptyList(x, xs)
-      }
-    }
-  }
-
-  class CannotConvertException(
-    message: String = null,
-    throwable: Throwable = null
-  ) extends RuntimeException(message, throwable)
-
-  class CannotCreateNonEmptyListException(
-    message: String = null,
-    throwable: Throwable = null
-  ) extends RuntimeException(message, throwable)
 }

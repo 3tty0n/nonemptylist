@@ -1,10 +1,10 @@
-package org.micchon.nonemptylist
+package org.micchon
 
 import org.scalatest.FlatSpec
-
+import org.scalatest.FunSpec
 import scala.collection.mutable.ListBuffer
 
-class NonEmptyListSpec extends FlatSpec {
+class NonEmptyListSpec extends FlatSpec with FunSpec {
 
   trait SetUp { self =>
     val nel0 = NonEmptyList(1, 2, 3)
@@ -54,12 +54,13 @@ class NonEmptyListSpec extends FlatSpec {
     val res = nel0 match {
       case NonEmptyList(x, xs) => x
     }
-
     assert(res === 1)
   }
 
   "implicit conversion" should "behave correctly" in new SetUp {
-    import NonEmptyList._
+    import org.micchon.nonemptylist.implicits._
+    import org.micchon.exception._
+
     assert(List(1, 2, 3).toNonEmptyList === NonEmptyList(1, 2, 3))
     assert(Seq("piyo").toNonEmptyList === NonEmptyList("piyo"))
     intercept[CannotConvertException] {
