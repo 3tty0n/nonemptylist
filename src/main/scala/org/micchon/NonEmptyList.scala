@@ -92,4 +92,12 @@ object NonEmptyList {
 
   def unapply[A](nel: NonEmptyList[A]): Option[(A, List[A])] =
     Some(nel.head, nel.tail)
+
+  def fromIterable[B](iterable: Iterable[B]): Option[NonEmptyList[B]] = {
+    val lst = iterable.toList
+    lst match {
+      case Nil => None
+      case x :: xs => Some(NonEmptyList(x, xs))
+    }
+  }
 }

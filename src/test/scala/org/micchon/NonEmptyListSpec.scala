@@ -56,6 +56,11 @@ class NonEmptyListSpec extends FunSuite {
     assert(nel3.forall(n => n == 1) === false)
   }
 
+  test("fromIterable") {
+    assert(NonEmptyList.fromIterable(Seq()) === None)
+    assert(NonEmptyList.fromIterable(Seq(1, 2, 3)) === Some(NonEmptyList(1, 2, 3)))
+  }
+
   test("unapply") {
     val res = nel0 match {
       case NonEmptyList(x, xs) => x
