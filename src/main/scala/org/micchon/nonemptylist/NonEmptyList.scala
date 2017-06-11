@@ -50,11 +50,7 @@ final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
   }
 
   def forall(f: A => Boolean): Boolean =
-    tail match {
-      case Nil => f(head)
-      case x :: xs if f(head) => if (f(x)) xs.forall(f) else false
-      case _ => false
-    }
+    (head :: tail).forall(f)
 
   override def toString: String = s"NonEmpty${head :: tail}"
 
