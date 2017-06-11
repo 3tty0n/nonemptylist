@@ -45,9 +45,17 @@ class NonEmptyListSpec extends FlatSpec {
     assert(nel0.filterNot(i => i % 2 == 0) === List(1, 3))
   }
 
-  "forall" should "" in new SetUp {
+  "forall" should "behave correctly" in new SetUp {
     assert(nel0.forall(n => n >= 0) === true)
     assert(nel3.forall(n => n == 1) === false)
+  }
+
+  "unapply" should "behave correlctly" in new SetUp {
+    val res = nel0 match {
+      case NonEmptyList(x, xs) => x
+    }
+
+    assert(res === 1)
   }
 
   "implicit conversion" should "behave correctly" in new SetUp {
