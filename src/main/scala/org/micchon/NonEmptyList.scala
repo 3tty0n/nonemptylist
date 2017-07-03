@@ -6,7 +6,7 @@ import org.micchon.exception.{CannotConvertException, CannotCreateException}
 final class NonEmptyList[+A] private (val head: A, val tail: List[A]) {
 
   def ::[B >: A](x: B): NonEmptyList[B] =
-    new NonEmptyList[B](x, head :: tail)
+    NonEmptyList[B](x, head :: tail)
 
   def :::[B >: A](xs: List[B]): NonEmptyList[B] =
     xs match {
@@ -86,9 +86,6 @@ object NonEmptyList {
 
   def apply[A](head: A, tail: A*): NonEmptyList[A] =
     new NonEmptyList[A](head, tail.toList)
-
-  def apply[A](): NonEmptyList[A] =
-    throw new CannotCreateException("Cannot create NonEmptyList()")
 
   def unapply[A](nel: NonEmptyList[A]): Option[(A, List[A])] =
     Some(nel.head, nel.tail)
